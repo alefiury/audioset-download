@@ -24,8 +24,8 @@ If a file is associated to multiple labels, it will be stored only once, and ass
 
 ```python
 from audioset_download import Downloader
-d = Downloader(root_path='test', labels=["Speech", "Afrobeat"], n_jobs=2, download_type='unbalanced_train', copy_and_replicate=False)
-d.download(format = 'vorbis')
+d = Downloader(root_path="test", labels=None, n_jobs=2, download_type="unbalanced_train")
+d.download(format = "wav")
 ```
 
 ## Implementation
@@ -38,10 +38,9 @@ The main class is `audioset_download.Downloader`. It is initialized using the fo
   * `balanced_train`: balanced train set.
   * `unbalanced_train`: unbalanced train set. This is the default
   * `eval`: evaluation set.
-* `copy_and_replicate`: if `True` if a file is associated to multiple labels, it will be copied and replicated for each label. If `False`, it will be associated to the first label in the list. Default is `True`.
 
 The methods of the class are:
-* `download(format='vorbis', quality=5)`: downloads the dataset. 
+* `download(format='vorbis', quality=5)`: downloads the dataset.
 * The format can be one of the following (supported by [yt-dlp](https://github.com/yt-dlp/yt-dlp#post-processing-options) `--audio-format` parameter):
     * `vorbis`: downloads the dataset in Ogg Vorbis format. This is the default.
     * `wav`: downloads the dataset in WAV format.
