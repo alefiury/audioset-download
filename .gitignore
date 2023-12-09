@@ -5,6 +5,7 @@
 
 test/
 audioset/
+audioset_eval/
 .*DS_Store
 
 ### Python ###
