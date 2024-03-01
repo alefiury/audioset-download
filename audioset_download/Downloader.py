@@ -18,7 +18,8 @@ class Downloader:
         root_path: str,
         labels: list = None, # None to download all the dataset
         n_jobs: int = 1,
-        download_type: str = 'unbalanced_train',
+        download_type: str = None,
+        metadata_path: str = None,
     ):
         """
         This method initializes the class.
@@ -32,6 +33,7 @@ class Downloader:
         self.labels = labels
         self.n_jobs = n_jobs
         self.download_type = download_type
+        self.metadata_path = metadata_path
 
         # Create the path
         os.makedirs(self.root_path, exist_ok=True)
@@ -66,19 +68,28 @@ class Downloader:
         self.format = format
         self.quality = quality
 
-        # Load the metadata
-        metadata = pd.read_csv(
-            f"http://storage.googleapis.com/us_audioset/youtube_corpus/v1/csv/{self.download_type}_segments.csv",
-            sep=', ',
-            skiprows=3,
-            header=None,
-            names=["YTID", "start_seconds", "end_seconds", "positive_labels"],
-            engine="python",
-        )
+        if self.metadata_path is not None:
+            metadata = pd.read_csv(
+                self.metadata_path,
+                sep=', ',
+                header=None,
+                names=["YTID", "start_seconds", "end_seconds", "positive_labels"],
+                engine="python",
+            )
+        elif self.download_type is None:
+            metadata = pd.read_csv(
+                f"http://storage.googleapis.com/us_audioset/youtube_corpus/v1/csv/{self.download_type}_segments.csv",
+                sep=', ',
+                skiprows=3,
+                header=None,
+                names=["YTID", "start_seconds", "end_seconds", "positive_labels"],
+                engine="python",
+            )
+        else:
+            raise ValueError("You must specify one of download_type or metadata_path")
         if self.labels is not None:
             self.real_labels = [self.display_to_machine_mapping[label] for label in self.labels]
             metadata = metadata[metadata["positive_labels"].apply(lambda x: any([label in x for label in self.real_labels]))]
-            # remove " in the labels
         metadata["positive_labels"] = metadata["positive_labels"].apply(lambda x: x.replace('"', ''))
         metadata = metadata.reset_index(drop=True)
 
@@ -104,7 +115,6 @@ class Downloader:
         :param ytid: YouTube ID.
         :param start_seconds: start time of the audio clip.
         :param end_seconds: end time of the audio clip.
-        :param positive_labels: labels associated with the audio clip.
         """
 
         # Download the file using yt-dlp

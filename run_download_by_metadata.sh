@@ -1,6 +1,6 @@
-root_path="audioset_eval"
-n_jobs=12
-download_type="eval"
+root_path="audioset_unbalanced/"
+n_jobs=1
+download_type="unbalanced_train" # (unbalanced_train, balanced_train, eval)
 format="wav"
 quality=0
 
