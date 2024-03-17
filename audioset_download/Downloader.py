@@ -117,7 +117,13 @@ class Downloader:
         :param end_seconds: end time of the audio clip.
         """
 
-        # Download the file using yt-dlp
-        os.system(f'yt-dlp -x --audio-format {self.format} --audio-quality {self.quality} --output "{os.path.join(self.root_path, ytid)}.%(ext)s" --postprocessor-args "-ss {start_seconds} -to {end_seconds}" https://www.youtube.com/watch?v={ytid}')
+        output_path = os.path.join(self.root_path, ytid+".wav")
+
+        if os.path.exists(output_path):
+            print(f"File {output_path} already exists. Skipping...")
+            return
+        else:
+            # Download the file using yt-dlp
+            os.system(f'yt-dlp -x --audio-format {self.format} --audio-quality {self.quality} --output "{os.path.join(self.root_path, ytid)}.%(ext)s" --postprocessor-args "-ss {start_seconds} -to {end_seconds}" https://www.youtube.com/watch?v={ytid}')
 
         return

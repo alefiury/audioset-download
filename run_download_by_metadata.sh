@@ -1,6 +1,6 @@
-root_path="audioset_unbalanced/" # output path
+root_path="../audioset_unbalanced/met" # output path
 n_jobs=12 # num threads
-metadata_path=""
+metadata_path="met.csv"
 
 format="wav"
 quality=0
